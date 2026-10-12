@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Wheresmitz</title>
+  <meta name="description" content="Every mitz sticker out in the wild, on one map. Spot one, snap it, pin it.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23fff'/%3E%3Ccircle cx='32' cy='32' r='23' fill='%23ffc61a'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' font-family='Arial Black,Arial' font-weight='900' fill='%2318213a'%3Em%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bagel+Fat+One&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Wheresmitz home">
+      <span class="brand-sticker" aria-hidden="true">m</span>
+      <span class="brand-word">Wheresmitz</span>
+    </a>
+    <dl class="tally" aria-live="polite">
+      <div><dt>Sightings</dt><dd id="stat-count">0</dd></div>
+      <div><dt>Spotters</dt><dd id="stat-spotters">0</dd></div>
+      <div><dt>Spread</dt><dd id="stat-spread">0 km</dd></div>
+    </dl>
+    <button class="btn btn-primary" id="open-upload" type="button">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg>
+      Add<span class="btn-long"> a sighting</span>
+    </button>
+  </header>
+
+  <main class="layout">
+    <section class="map-wrap" aria-label="Map of mitz sightings">
+      <div id="map"></div>
+      <p class="map-empty" id="map-empty" hidden>
+        No mitz has been spotted yet. Found one? <button class="link-btn" type="button" data-open-upload>Put the first pin on the map.</button>
+      </p>
+    </section>
+
+    <aside class="feed" aria-label="Latest sightings">
+      <div class="feed-head">
+        <h2>Latest sightings</h2>
+        <p>Every photo here shows a mitz sticker stuck somewhere in the world. Tap one to fly to it.</p>
+      </div>
+      <ol class="feed-list" id="feed-list"></ol>
+    </aside>
+  </main>
+
+  <!-- Upload flow -->
+  <dialog class="sheet" id="upload-dialog" aria-labelledby="upload-title">
+    <form id="upload-form" novalidate>
+      <div class="sheet-head">
+        <h2 id="upload-title">Report a mitz</h2>
+        <button class="icon-btn" type="button" id="close-upload" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <label class="drop" id="drop" for="photo-input">
+        <input type="file" id="photo-input" name="photo" accept="image/*,.heic,.heif" required>
+        <img id="photo-preview" alt="" hidden>
+        <span class="drop-copy" id="drop-copy">
+          <strong>Choose a photo of the mitz</strong>
+          <span>or drop it here. Original photos work best: they carry the GPS location your camera recorded.</span>
+        </span>
+      </label>
+
+      <div class="loc" id="loc-block" hidden>
+        <p class="loc-status" id="loc-status"></p>
+        <div id="pick-map" class="pick-map" aria-label="Location picker map"></div>
+        <p class="hint" id="loc-hint">Drag the pin if it's off.</p>
+      </div>
+
+      <div class="fields" id="fields" hidden>
+        <div class="field">
+          <label for="place-input">Where is it?</label>
+          <input id="place-input" name="place" maxlength="120" placeholder="e.g. Lamp post outside Cafe Luna, Austin">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="spotter-input">Your name <span class="opt">optional</span></label>
+            <input id="spotter-input" name="spotter" maxlength="40" autocomplete="nickname">
+          </div>
+        </div>
+        <div class="field">
+          <label for="caption-input">Note <span class="opt">optional</span></label>
+          <textarea id="caption-input" name="caption" maxlength="280" rows="2" placeholder="What's it stuck to?"></textarea>
+        </div>
+      </div>
+
+      <p class="form-error" id="form-error" role="alert" hidden></p>
+
+      <div class="sheet-foot">
+        <button class="btn btn-ghost" type="button" id="cancel-upload">Cancel</button>
+        <button class="btn btn-primary" type="submit" id="submit-upload" disabled>Pin it</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Photo viewer -->
+  <dialog class="viewer" id="viewer" aria-label="Sighting photo">
+    <button class="icon-btn viewer-close" type="button" id="close-viewer" aria-label="Close">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
+    <figure>
+      <img id="viewer-img" alt="">
+      <figcaption id="viewer-cap"></figcaption>
+    </figure>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/exifr@7.1.3/dist/full.umd.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
