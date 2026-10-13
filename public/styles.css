@@ -213,7 +213,7 @@ button, input, textarea { font: inherit; color: inherit; }
 .leaflet-popup-content-wrapper { border-radius: var(--r); background: var(--panel); color: var(--ink); box-shadow: var(--shadow); }
 .leaflet-popup-tip { background: var(--panel); }
 .leaflet-container a.leaflet-popup-close-button { color: var(--ink-soft); }
-.leaflet-popup-content { margin: 12px; width: 240px !important; font: 14px/1.45 var(--f-body); }
+.leaflet-popup-content { margin: 12px; width: min(240px, 62vw) !important; font: 14px/1.45 var(--f-body); }
 .pop-img {
   display: block; width: 100%; aspect-ratio: 4 / 3; max-width: 100%;
   object-fit: cover; border-radius: 10px; cursor: zoom-in; background: var(--line);
@@ -325,6 +325,8 @@ dialog::backdrop { background: rgb(10 14 28 / .55); backdrop-filter: blur(2px); 
   .tally div:nth-child(3) { display: none; }
   .layout { grid-template-columns: 1fr; grid-template-rows: minmax(300px, 58%) minmax(0, 1fr); }
   .feed { border-left: 0; border-top: 1px solid var(--line); }
+  .pop-img { aspect-ratio: 16 / 10; }
+  .pop-place { margin-top: 8px; }
 }
 @media (max-width: 560px) {
   .topbar { flex-wrap: wrap; gap: 10px 14px; }

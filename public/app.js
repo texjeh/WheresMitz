@@ -42,6 +42,9 @@
 
   const cluster = L.markerClusterGroup({
     showCoverageOnHover: false,
+    // Keep off-screen pins attached: when a tall popup auto-pans its pin out of view
+    // (short map on phones), removing the pin would close the popup instantly.
+    removeOutsideVisibleBounds: false,
     maxClusterRadius: 56,
     iconCreateFunction: (c) => {
       const n = c.getChildCount();
@@ -76,7 +79,7 @@
       popupAnchor: [0, -58],
     });
     const m = L.marker([s.lat, s.lng], { icon, title: s.place || 'Mitz sighting', riseOnHover: true });
-    m.bindPopup(() => popupHtml(s), { maxWidth: 264, minWidth: 264 });
+    m.bindPopup(() => popupHtml(s), { maxWidth: 264, minWidth: 200, autoPanPadding: [12, 12] });
     m.on('popupopen', () => setActive(s.id));
     m.on('popupclose', () => setActive(null));
     markers.set(s.id, m);
