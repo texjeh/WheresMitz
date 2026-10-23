@@ -8,17 +8,23 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23fff'/%3E%3Ccircle cx='32' cy='32' r='23' fill='%23ffc61a'/%3E%3Ctext x='32' y='42' font-size='28' text-anchor='middle' font-family='Arial Black,Arial' font-weight='900' fill='%2318213a'%3Em%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bagel+Fat+One&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bagel+Fat+One&family=IBM+Plex+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Wheresmitz home">
-      <span class="brand-sticker" aria-hidden="true">m</span>
-      <span class="brand-word">Wheresmitz</span>
-    </a>
+    <div class="brand-block">
+      <a class="brand" href="/" aria-label="Wheresmitz home">
+        <span class="brand-sticker" aria-hidden="true">m</span>
+        <span class="brand-word">Wheresmitz</span>
+      </a>
+      <p class="tagline">Blessed are those who seek the Mitz, for they shall be found. Blessed are those who flee the Mitz, for they shall also be found.</p>
+    </div>
+    <nav class="topnav" aria-label="Site">
+      <a href="/about">About Mitz</a>
+    </nav>
     <dl class="tally" aria-live="polite">
       <div><dt>Sightings</dt><dd id="stat-count">0</dd></div>
       <div><dt>Spotters</dt><dd id="stat-spotters">0</dd></div>

@@ -165,7 +165,7 @@ app.delete('/api/sightings/:id', async (req, res) => {
 });
 
 app.use('/uploads', express.static(UPLOAD_DIR, { maxAge: '30d', immutable: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), { extensions: ['html'] }));
 
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
